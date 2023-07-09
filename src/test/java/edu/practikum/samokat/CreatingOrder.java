@@ -16,8 +16,8 @@ public class CreatingOrder {
     private WebDriver driver;
     @Before
     public void setUp(){
-        //driver = new ChromeDriver();
-        driver = new FirefoxDriver();
+        driver = new ChromeDriver();
+     //   driver = new FirefoxDriver();
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
     }
 
