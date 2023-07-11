@@ -56,8 +56,8 @@ public class AboutRent {
         driver.findElement(button).click();
     }
     //Проверка отображения формы Про аренду
-    public void isFormDisplayed(By header){
-        driver.findElement(header).isDisplayed();
+    public boolean isFormDisplayed(By header){
+        return driver.findElement(header).isDisplayed();
     }
     //Метод заполнения формы
     public void enterForm(String date, int numberTerm, int numberColor, String comment){
@@ -69,10 +69,10 @@ public class AboutRent {
         buttonClick(buttonOrder);
     }
     //метод проверки успешности заказа
-    public void isSuccessOrder(){
+    public boolean isSuccessOrder(){
         isFormDisplayed(headerConfirmationWindow);
         buttonClick(buttonYes);
-        isFormDisplayed(successWindow);
+        return isFormDisplayed(successWindow);
     }
 
 

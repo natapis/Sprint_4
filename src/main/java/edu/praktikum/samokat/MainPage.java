@@ -13,14 +13,7 @@ public class MainPage {
     private By questions = By.xpath(".//div[@class='accordion__heading']");
     //Ответы
     private By answers = By.xpath(".//div[@class='accordion__panel']");
-    private final String[] ANSWERS = {"Сутки — 400 рублей. Оплата курьеру — наличными или картой.",
-            "Пока что у нас так: один заказ — один самокат. Если хотите покататься с друзьями, можете просто сделать несколько заказов — один за другим.",
-            "Допустим, вы оформляете заказ на 8 мая. Мы привозим самокат 8 мая в течение дня. Отсчёт времени аренды начинается с момента, когда вы оплатите заказ курьеру. Если мы привезли самокат 8 мая в 20:30, суточная аренда закончится 9 мая в 20:30.",
-            "Только начиная с завтрашнего дня. Но скоро станем расторопнее.",
-            "Пока что нет! Но если что-то срочное — всегда можно позвонить в поддержку по красивому номеру 1010.",
-            "Самокат приезжает к вам с полной зарядкой. Этого хватает на восемь суток — даже если будете кататься без передышек и во сне. Зарядка не понадобится.",
-            "Да, пока самокат не привезли. Штрафа не будет, объяснительной записки тоже не попросим. Все же свои.",
-            "Да, обязательно. Всем самокатов! И Москве, и Московской области."};
+
     private WebDriver driver;
 
     public MainPage(WebDriver driver){
@@ -39,17 +32,38 @@ public class MainPage {
         driver.findElements(questions).get(numberQuestion).click();
     }
 
-    //Метод сравнения ответа
-    public void checkAnswer(int numberQuestion){
+    //Метод получения ответа
+    public String getAnswer(int numberQuestion){
         clickToQuestion(numberQuestion);
         ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", driver.findElements(answers).get(numberQuestion));
-        Assert.assertEquals("Не тот текст", ANSWERS[numberQuestion],driver.findElements(answers).get(numberQuestion).getText());
+        return driver.findElements(answers).get(numberQuestion).getText();
+    }
+
+    //Подскролл к ответу
+    public void scrollToAnswer(int numberAnswer){
+        ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", driver.findElements(answers).get(numberAnswer));
+    }
+
+    public String getAnswerToNumber(int numberAnswer){
+        return driver.findElements(answers).get(numberAnswer).getText();
     }
 
     //Метод нажатия на одну из кнопок создания
     public void buttonCreateClick(int numberButton){
         ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", driver.findElements(createOrderButtons).get(numberButton));
         driver.findElements(createOrderButtons).get(numberButton).click();
+    }
+
+    public boolean createOrder(int numberButton, String name, String surName, String address, int numberMetro, String mobile, String date, int numberTerm, int numberColor, String comment) {
+        MainPage mainPage = new MainPage(driver);
+        mainPage.open();
+        mainPage.buttonCreateClick(numberButton);
+        ForWhomForm fwForm = new ForWhomForm(driver);
+        fwForm.isFormDisplayed();
+        fwForm.enterForm(name, surName, address, numberMetro, mobile);
+        AboutRent aboutRent = new AboutRent(driver);
+        aboutRent.enterForm(date, numberTerm, numberColor, comment);
+        return aboutRent.isSuccessOrder();
     }
 
 
